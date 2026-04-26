@@ -1,0 +1,200 @@
+$date
+	Sun Apr 19 20:52:50 2026
+$end
+$version
+	Icarus Verilog
+$end
+$timescale
+	1ps
+$end
+$scope module memoryTB $end
+$var wire 32 ! write_data_out [31:0] $end
+$var wire 5 " mem_write_reg [4:0] $end
+$var wire 1 # MEM_WB_regwrite $end
+$var wire 1 $ MEM_PCSrc $end
+$var reg 32 % alu_result [31:0] $end
+$var reg 1 & branch $end
+$var reg 1 ' clk $end
+$var reg 5 ( five_bit_muxout [4:0] $end
+$var reg 1 ) memread $end
+$var reg 1 * memwrite $end
+$var reg 32 + rdata2out [31:0] $end
+$var reg 2 , wb_ctlout [1:0] $end
+$var reg 1 - zero $end
+$scope module uut $end
+$var wire 32 . alu_result [31:0] $end
+$var wire 1 & branch $end
+$var wire 1 ' clk $end
+$var wire 5 / five_bit_muxout [4:0] $end
+$var wire 1 ) memread $end
+$var wire 1 * memwrite $end
+$var wire 32 0 rdata2out [31:0] $end
+$var wire 2 1 wb_ctlout [1:0] $end
+$var wire 1 - zero $end
+$var wire 32 2 write_data_out [31:0] $end
+$var wire 32 3 read_data_in [31:0] $end
+$var wire 5 4 mem_write_reg [4:0] $end
+$var wire 32 5 latched_read_data [31:0] $end
+$var wire 1 6 latched_memtoreg $end
+$var wire 32 7 latched_alu [31:0] $end
+$var wire 1 # MEM_WB_regwrite $end
+$var wire 1 $ MEM_PCSrc $end
+$scope module AND_4 $end
+$var wire 1 $ PCSrc $end
+$var wire 1 & membranch $end
+$var wire 1 - zero $end
+$upscope $end
+$scope module data_memory4 $end
+$var wire 32 8 addr [31:0] $end
+$var wire 1 ' clk $end
+$var wire 1 ) memread $end
+$var wire 1 * memwrite $end
+$var wire 32 9 write_data [31:0] $end
+$var reg 32 : read_data [31:0] $end
+$var integer 32 ; i [31:0] $end
+$upscope $end
+$scope module mem_wb4 $end
+$var wire 32 < alu_result_in [31:0] $end
+$var wire 1 ' clk $end
+$var wire 2 = control_wb_in [1:0] $end
+$var wire 32 > read_data_in [31:0] $end
+$var wire 5 ? write_reg_in [4:0] $end
+$var reg 32 @ mem_alu_result [31:0] $end
+$var reg 5 A mem_write_reg [4:0] $end
+$var reg 1 6 memtoreg $end
+$var reg 32 B read_data [31:0] $end
+$var reg 1 # regwrite $end
+$upscope $end
+$scope module wb_mux $end
+$var wire 32 C mem_alu_result [31:0] $end
+$var wire 32 D read_data [31:0] $end
+$var wire 1 6 sel $end
+$var wire 32 E writedata [31:0] $end
+$upscope $end
+$upscope $end
+$upscope $end
+$enddefinitions $end
+$comment Show the parameter values. $end
+$dumpall
+$end
+#0
+$dumpvars
+b0 E
+b0 D
+b0 C
+b0 B
+b0 A
+b0 @
+b10 ?
+b100 >
+b11 =
+b100 <
+b110 ;
+b100 :
+b10010001101000101011001111000 9
+b100 8
+b0 7
+06
+b0 5
+b0 4
+b100 3
+b0 2
+b11 1
+b10010001101000101011001111000 0
+b10 /
+b100 .
+0-
+b11 ,
+b10010001101000101011001111000 +
+0*
+1)
+b10 (
+0'
+0&
+b100 %
+0$
+0#
+b0 "
+b0 !
+$end
+#5000
+b100 !
+b100 2
+b100 E
+b10 "
+b10 4
+b10 A
+b100 7
+b100 @
+b100 C
+b100 5
+b100 B
+b100 D
+16
+1#
+1'
+#10000
+0'
+#15000
+1'
+#20000
+b0 3
+b0 :
+b0 >
+0'
+0)
+1*
+#25000
+b0 !
+b0 2
+b0 E
+b0 5
+b0 B
+b0 D
+1'
+#30000
+0'
+#35000
+1'
+#40000
+b10010001101000101011001111000 3
+b10010001101000101011001111000 :
+b10010001101000101011001111000 >
+0'
+1)
+0*
+#45000
+b10010001101000101011001111000 !
+b10010001101000101011001111000 2
+b10010001101000101011001111000 E
+b10010001101000101011001111000 5
+b10010001101000101011001111000 B
+b10010001101000101011001111000 D
+1'
+#50000
+0'
+#55000
+1'
+#60000
+b0 3
+b0 :
+b0 >
+1$
+0'
+0)
+1-
+1&
+#65000
+b0 !
+b0 2
+b0 E
+b0 5
+b0 B
+b0 D
+1'
+#70000
+0'
+#75000
+1'
+#80000
+0'
