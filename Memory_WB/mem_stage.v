@@ -48,7 +48,7 @@ module mem_stage(
     );
  
  
-    mux wb_mux (
+    wb_mux wb_mux_i(
         .read_data     (latched_read_data),
         .mem_alu_result(latched_alu),
         .sel           (latched_memtoreg),

@@ -1,4 +1,4 @@
-module mux (
+module mux(
     input wire [31:0] a_true,  
     input wire [31:0] b_false, 
     input wire sel,           

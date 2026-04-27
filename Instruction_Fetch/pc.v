@@ -4,6 +4,9 @@ input wire rst,
 input wire [31:0] pc_in,
 output reg [31:0] pc_out
 );
+
+initial pc_out = 32'd0;   // start at address 0
+
 always @(posedge clk) begin
     if (rst)
         pc_out <= 32'd0; //clear on async reset

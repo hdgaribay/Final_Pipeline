@@ -1,4 +1,4 @@
-module mux(
+module wb_mux(
 input [31:0] read_data,
 input [31:0] mem_alu_result,
 input sel,
