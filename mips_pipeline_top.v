@@ -81,7 +81,7 @@ module mips_pipeline_top (
         .s_extendout     (id_ex_sign_ext),
         .instrout_2016   (id_ex_instr_2016),
         .instrout_1511   (id_ex_instr_1511),
-        // outputs (after EX/MEM latch inside this module)
+        // outputs 
         .wb_ctlout       (ex_mem_wb),
         .branch          (ex_mem_branch),
         .memread         (ex_mem_memread),

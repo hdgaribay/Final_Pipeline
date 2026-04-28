@@ -69,9 +69,6 @@ module mips_pipeline_tb;
                  uut.ID_stage.rf0.REG[2],
                  uut.ID_stage.rf0.REG[3]);
     end
-
-    // Run long enough for all 24 instructions to drain through
-    // 5 stages: 24 + 4 = 28 cycles minimum. Run 35 to be safe.
     initial begin
         #350;
         $display("\n==== FINAL REGISTER STATE ====");
