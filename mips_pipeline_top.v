@@ -1,9 +1,9 @@
-module pipeline (
+module mips_pipeline_top (
     input  wire clk
 );
 
     wire rst = 1'b0;
--
+
     wire [31:0] if_id_instr;
     wire [31:0] if_id_npc;
 
