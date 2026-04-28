@@ -2,7 +2,10 @@
 
 module mips_pipeline_tb;
     reg clk;
-
+    wire [31:0] R0 = uut.ID_stage.rf0.REG[0];
+    wire [31:0] R1 = uut.ID_stage.rf0.REG[1];
+    wire [31:0] R2 = uut.ID_stage.rf0.REG[2];
+    wire [31:0] R3 = uut.ID_stage.rf0.REG[3];
     // DUT
     mips_pipeline_top uut (
         .clk(clk)
