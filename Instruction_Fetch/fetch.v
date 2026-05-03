@@ -41,13 +41,13 @@ module fetch (
     );
 
     ifIdLatch ifIdLatch0 (
-        .clk(clk),
-        .rst(rst),
-        .pc_in(next_pc),       
-        .instr_in(instr_data),
-        .pc_out(if_id_npc),
-        .instr_out(if_id_instr)
-        .write_en(ifid_write_en),
-    );
+    .clk       (clk),
+    .rst       (rst),
+    .write_en  (ifid_write_en),
+    .instr_in  (instr_data),
+    .npc_in    (next_pc),
+    .instr_out (if_id_instr),
+    .npc_out   (if_id_npc)
+);
 
 endmodule

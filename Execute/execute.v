@@ -1,4 +1,5 @@
 module EXECUTE(
+input wire clk,
 input wire [1:0] wb_ctl,  //11 inputs, based off of outputs of ID/EX latch (Lab 2-2)
 input wire [2:0] m_ctl,
 input wire regdst, alusrc,
@@ -39,14 +40,12 @@ forwarding_unit fu0 (
     .forward_b       (forward_b)
 );
 
-// fwd_a mux feeds ALU input a
-assign alu_a_in = (forward_a == 2'b10) ? alu_result_internal :  // EX/MEM forward
-                  (forward_a == 2'b01) ? mem_wb_write_data   :  // MEM/WB forward
-                                         rdata1;                 // no forward
+assign alu_a_in = (forward_a == 2'b10) ? alu_result        :
+                  (forward_a == 2'b01) ? mem_wb_write_data :
+                                         rdata1;
 
-// fwd_b mux feeds top_mux's b input (picks between this and sign_ext)
-assign fwd_b_out = (forward_b == 2'b10) ? alu_result_internal :
-                   (forward_b == 2'b01) ? mem_wb_write_data   :
+assign fwd_b_out = (forward_b == 2'b10) ? alu_result        :
+                   (forward_b == 2'b01) ? mem_wb_write_data :
                                           rdata2;
 adder adder3(
 .add_in1(npcout),
@@ -78,6 +77,7 @@ top_mux top_mux3(
 .alusrc(alusrc)
 );
 ex_mem ex_mem3(
+.clk(clk),
 .ctlwb_out(wb_ctl), // inputs, which should stem from intermediate modules 
 .ctlm_out(m_ctl),
 .adder_out(adder_out),

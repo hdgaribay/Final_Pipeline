@@ -18,7 +18,7 @@ module mips_pipeline_top (
     wire [31:0] id_ex_sign_ext;
     wire [4:0]  id_ex_instr_2016;     // rt
     wire [4:0]  id_ex_instr_1511;     // rd
-    wire [4:0]  id_ex_instr_2521;     // r
+    wire [4:0]  id_ex_instr_2521;     // rs
 
     // EX/MEM
     wire [1:0]  ex_mem_wb;
@@ -90,6 +90,7 @@ module mips_pipeline_top (
 
     EXECUTE EX_stage (
         // controls
+        .clk                 (clk),
         .wb_ctl              (id_ex_wb),
         .m_ctl               (id_ex_mem),
         .regdst              (id_ex_execute[3]),
