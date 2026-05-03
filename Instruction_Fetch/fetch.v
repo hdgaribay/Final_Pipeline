@@ -3,6 +3,8 @@ module fetch (
     input  wire        rst,
     input  wire        ex_mem_pc_src,
     input  wire [31:0] ex_mem_npc,
+    input  wire pc_write_en,
+    input  wire ifid_write_en,
     output wire [31:0] if_id_instr,
     output wire [31:0] if_id_npc
 );
@@ -23,7 +25,8 @@ module fetch (
         .clk(clk),
         .rst(rst),
         .pc_in(pc_mux),
-        .pc_out(pc_out)
+        .pc_out(pc_out),
+        .write_en(pc_write_en)
     );
 
     incrementer in0 (
@@ -44,6 +47,7 @@ module fetch (
         .instr_in(instr_data),
         .pc_out(if_id_npc),
         .instr_out(if_id_instr)
+        .write_en(ifid_write_en),
     );
 
 endmodule

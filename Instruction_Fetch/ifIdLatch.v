@@ -1,18 +1,25 @@
-module ifIdLatch(
-    input wire clk,
-    input wire rst,
-    input wire [31:0] pc_in,
-    input wire [31:0] instr_in,
-    output reg [31:0] pc_out,
-    output reg [31:0] instr_out
+module ifIdLatch (
+    input  wire        clk,
+    input  wire        rst,
+    input  wire        write_en,    
+    input  wire [31:0] instr_in,
+    input  wire [31:0] npc_in,
+    output reg  [31:0] instr_out,
+    output reg  [31:0] npc_out
 );
-    always @(posedge clk) begin
-        if (rst) begin
-            pc_out <= 32'b0; 
-            instr_out <= 32'b0; 
-        end else begin
-            pc_out <= pc_in; // pass through pc+4
-            instr_out <= instr_in; //pass through instr. from instr. mem
-        end
+
+initial begin
+    instr_out = 32'h80000000;  // NOP
+    npc_out = 32'd0;
+end
+
+always @(posedge clk) begin
+    if (rst) begin
+        instr_out <= 32'h80000000;
+        npc_out <= 32'd0;
+    end else if (write_en) begin
+        instr_out <= instr_in;
+        npc_out <= npc_in;
     end
+end
 endmodule

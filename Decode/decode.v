@@ -6,7 +6,11 @@ module decode (
     input  wire [31:0] mem_wb_write_data,
     input  wire [31:0] if_id_instr,
     input  wire [31:0] if_id_npc,
+    input  wire        id_ex_memread,
+    input  wire [4:0]  id_ex_rt_for_haz,
     //outputs
+    output wire        stall_pc,
+    output wire        stall_ifid,
     output wire [1:0]  id_ex_wb,
     output wire [2:0]  id_ex_mem,
     output wire [3:0]  id_ex_execute,
@@ -15,15 +19,31 @@ module decode (
     output wire [31:0] id_ex_readdat2,
     output wire [31:0] id_ex_sign_ext,
     output wire [4:0]  id_ex_instr_bits_20_16,
-    output wire [4:0]  id_ex_instr_bits_15_11
+    output wire [4:0]  id_ex_instr_bits_15_11,
+    output wire [4:0]  id_ex_instr_bits_25_21
 );
-   //internal wires
+    //internal wires
     wire [31:0] sign_ext_internal;
     wire [31:0] readdat1_internal;
     wire [31:0] readdat2_internal;
     wire [1:0]  wb_internal;
     wire [2:0]  mem_internal;
     wire [3:0]  ex_internal;
+    wire        bubble_signal;
+
+    // Hazard detection unit: detects load-use hazards and asserts
+    // stall_pc, stall_ifid (write-enables for PC and IF/ID — active high
+    // means "allow update"; low means "freeze") and bubble (active high
+    // means "inject a NOP into ID/EX").
+    hazard_detection hd0 (
+        .id_ex_memread(id_ex_memread),
+        .id_ex_rt     (id_ex_rt_for_haz),
+        .if_id_rs     (if_id_instr[25:21]),
+        .if_id_rt     (if_id_instr[20:16]),
+        .stall_pc     (stall_pc),
+        .stall_ifid   (stall_ifid),
+        .bubble       (bubble_signal)
+    );
 
     signExt sE0 (
         .immediate(if_id_instr[15:0]),
@@ -51,18 +71,26 @@ module decode (
         .ex(ex_internal)
     );
 
+    // Bubble injection: zero out control signals when the hazard unit
+    // detects a stall. Datapath values still flow through, but with
+    // wb=00, mem=000, ex=0000 the instruction commits nothing.
+    wire [1:0] wb_to_latch  = bubble_signal ? 2'b00   : wb_internal;
+    wire [2:0] mem_to_latch = bubble_signal ? 3'b000  : mem_internal;
+    wire [3:0] ex_to_latch  = bubble_signal ? 4'b0000 : ex_internal;
+
     idExLatch iEL0 (
         .clk(clk),
         .rst(rst),
-        .ctl_wb(wb_internal),
-        .ctl_mem(mem_internal),
-        .ctl_ex(ex_internal),
+        .ctl_wb(wb_to_latch),
+        .ctl_mem(mem_to_latch),
+        .ctl_ex(ex_to_latch),
         .npc(if_id_npc),
         .readdat1(readdat1_internal),
         .readdat2(readdat2_internal),
         .sign_ext(sign_ext_internal),
         .instr_bits_20_16(if_id_instr[20:16]),
         .instr_bits_15_11(if_id_instr[15:11]),
+        .instr_bits_25_21(if_id_instr[25:21]),
         .wb_out(id_ex_wb),
         .mem_out(id_ex_mem),
         .ctl_out(id_ex_execute),
@@ -71,7 +99,8 @@ module decode (
         .readdat2_out(id_ex_readdat2),
         .sign_ext_out(id_ex_sign_ext),
         .instr_bits_20_16_out(id_ex_instr_bits_20_16),
-        .instr_bits_15_11_out(id_ex_instr_bits_15_11)
+        .instr_bits_15_11_out(id_ex_instr_bits_15_11),
+        .instr_bits_25_21_out(id_ex_instr_bits_25_21)
     );
 
 endmodule

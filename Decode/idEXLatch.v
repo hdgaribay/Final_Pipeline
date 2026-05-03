@@ -10,6 +10,9 @@ module idExLatch (
     input  wire [31:0] sign_ext,
     input  wire [4:0]  instr_bits_20_16,
     input  wire [4:0]  instr_bits_15_11,
+    // new ports
+    input  wire [4:0] instr_bits_25_21,
+    output reg  [4:0] instr_bits_25_21_out,
     //outputs
     output reg  [1:0]  wb_out,
     output reg  [2:0]  mem_out,
@@ -32,6 +35,7 @@ module idExLatch (
             sign_ext_out         <= 32'b0;
             instr_bits_20_16_out <= 5'b0;
             instr_bits_15_11_out <= 5'b0;
+            instr_bits_25_21_out = 5'd0;
         end else begin
             wb_out               <= ctl_wb;
             mem_out              <= ctl_mem;
@@ -42,6 +46,7 @@ module idExLatch (
             sign_ext_out         <= sign_ext;
             instr_bits_20_16_out <= instr_bits_20_16;
             instr_bits_15_11_out <= instr_bits_15_11;
+            instr_bits_25_21_out <= instr_bits_25_21;
         end
     end
 endmodule

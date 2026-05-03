@@ -1,7 +1,3 @@
-/*
-Execute Stage: This uses the outputs of Fetch and Decode Stages as well as combining the modules: adder, bottom_mux(5-bit), alu_control, alu, top_mux (32-bit),
-and ex_mem.
-*/
 module EXECUTE(
 input wire [1:0] wb_ctl,  //11 inputs, based off of outputs of ID/EX latch (Lab 2-2)
 input wire [2:0] m_ctl,
@@ -9,6 +5,12 @@ input wire regdst, alusrc,
 input wire [1:0] aluop, 
 input wire [31:0] npcout, rdata1, rdata2, s_extendout,
 input wire [4:0] instrout_2016, instrout_1511,
+input  wire [4:0]  id_ex_rs,
+input  wire        ex_mem_regwrite_in,
+input  wire [4:0]  ex_mem_write_reg_in,
+input  wire        mem_wb_regwrite_in,
+input  wire [4:0]  mem_wb_write_reg_in,
+input  wire [31:0] mem_wb_write_data,    // for forward = 01
 output wire [1:0] wb_ctlout, //9 total outputs from EX/MEM latch
 output wire branch, memread, memwrite,
 output wire [31:0] EX_MEM_NPC,
@@ -21,6 +23,31 @@ wire [31:0] adder_out, b, aluout;
 wire [4:0] muxout;
 wire [2:0] control;
 wire aluzero;
+
+// New for forwarding
+wire [1:0]  forward_a, forward_b;
+wire [31:0] alu_a_in;       // output of fwd_a mux to alu.a
+wire [31:0] fwd_b_out;      // output of fwd_b mux to top_mux input
+forwarding_unit fu0 (
+    .ex_mem_regwrite (ex_mem_regwrite_in),
+    .ex_mem_write_reg(ex_mem_write_reg_in),
+    .mem_wb_regwrite (mem_wb_regwrite_in),
+    .mem_wb_write_reg(mem_wb_write_reg_in),
+    .id_ex_rs        (id_ex_rs),
+    .id_ex_rt        (instrout_2016),  // already in your module — this is rt
+    .forward_a       (forward_a),
+    .forward_b       (forward_b)
+);
+
+// fwd_a mux feeds ALU input a
+assign alu_a_in = (forward_a == 2'b10) ? alu_result_internal :  // EX/MEM forward
+                  (forward_a == 2'b01) ? mem_wb_write_data   :  // MEM/WB forward
+                                         rdata1;                 // no forward
+
+// fwd_b mux feeds top_mux's b input (picks between this and sign_ext)
+assign fwd_b_out = (forward_b == 2'b10) ? alu_result_internal :
+                   (forward_b == 2'b01) ? mem_wb_write_data   :
+                                          rdata2;
 adder adder3(
 .add_in1(npcout),
 .add_in2(s_extendout),
@@ -38,16 +65,16 @@ alu_control alu_control3(
 .select(control)
 );
 alu alu3(
-.a(rdata1),
+.a(alu_a_in),
 .b(b), // b <= output of top_mux
 .control(control),
 .result(aluout),
 .zero(aluzero)
 );
 top_mux top_mux3(
-.y(b), // output of mux is 32 bit "b" wire
+.y(b), 
 .a(s_extendout), 
-.b(rdata2), // input a = 1'b1, b = 1'b0
+.b(fwd_b_out), 
 .alusrc(alusrc)
 );
 ex_mem ex_mem3(
